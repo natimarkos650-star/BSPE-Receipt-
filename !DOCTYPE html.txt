@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Printing Status Tracker - Ethiopia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="max-w-md mx-auto mt-10 p-6 bg-white rounded-xl shadow-md">
+        <h2 class="text-2xl font-bold text-blue-800 mb-4 text-center">Receipt Order Tracker</h2>
+        <p class="text-gray-600 text-sm mb-6 text-center">Enter your 10-digit TIN to check production progress.</p>
+        
+        <div class="mb-4">
+            <input id="tinInput" type="text" placeholder="Enter TIN (e.g. 1234567890)" 
+                   class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <button onclick="checkStatus()" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">Track Status</button>
+
+        <div id="result" class="mt-8 hidden">
+            <div class="flex justify-between mb-2 text-xs font-semibold uppercase">
+                <span id="step1" class="text-gray-400">Pre-Press</span>
+                <span id="step2" class="text-gray-400">Press</span>
+                <span id="step3" class="text-gray-400">Post-Press</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4">
+                <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+            </div>
+            <p id="statusText" class="text-center font-medium text-blue-900"></p>
+        </div>
+    </div>
+
+    <script>
+        const mockData = {
+            "1234567890": { stage: 1, text: "Designing & Plate Making" },
+            "0044556677": { stage: 2, text: "Currently on the Printing Press" },
+            "9988776655": { stage: 3, text: "Cutting & Binding (Ready Soon)" }
+        };
+
+        function checkStatus() {
+            const tin = document.getElementById('tinInput').value;
+            const resultDiv = document.getElementById('result');
+            const bar = document.getElementById('progressBar');
+            const statusText = document.getElementById('statusText');
+            
+            if (mockData[tin]) {
+                resultDiv.classList.remove('hidden');
+                const data = mockData[tin];
+                bar.style.width = (data.stage * 33.3) + "%";
+                statusText.innerText = data.text;
+                
+                // Reset colors
+                document.getElementById('step1').className = data.stage >= 1 ? "text-blue-600 font-bold" : "text-gray-400";
+                document.getElementById('step2').className = data.stage >= 2 ? "text-blue-600 font-bold" : "text-gray-400";
+                document.getElementById('step3').className = data.stage >= 3 ? "text-blue-600 font-bold" : "text-gray-400";
+            } else {
+                alert("TIN not found in our current production batch.");
+            }
+        }
+    </script>
+</body>
+</html>
